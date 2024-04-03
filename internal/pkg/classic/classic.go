@@ -1,6 +1,9 @@
 package classic
 
-import "fmt"
+import (
+	"ads-cw/pkg/display"
+	"ads-cw/pkg/sudoku_board"
+)
 
 func Play() {
 	size := config()
@@ -12,6 +15,9 @@ func config() (size int) {
 }
 
 func run(size int) {
-	fmt.Printf("running classic sudoku with board size of %d", size)
-
+	board := sudoku_board.GenerateBoard(size)
+	var x, y int
+	for {
+		x, y = display.Display(board, x, y)
+	}
 }

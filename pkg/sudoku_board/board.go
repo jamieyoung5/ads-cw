@@ -1,6 +1,29 @@
 package sudoku_board
 
+import "fmt"
+
 type Board [][]Tile
+
+func (b Board) Print(pointerX int, pointerY int) {
+	fmt.Printf(SerializeBoard(b, pointerX, pointerY))
+}
+
+func (b Board) GetInstructions() string {
+	return "Use arrow keys to navigate board, enter digit to edit tile"
+}
+
+func (b Board) GetDimensions() (height int, width int) {
+	return len(b), len(b[0])
+}
+
+func (b Board) Select(pointerX int, pointerY int, keycode byte) {
+	if !(keycode > '1' && keycode <= '9') {
+		fmt.Printf("Please enter a number between 1 and 9!")
+		return
+	}
+
+	b[pointerY][pointerX].Value = int(keycode - '0')
+}
 
 func GenerateBoard(size int) Board {
 	return createTestBoard()

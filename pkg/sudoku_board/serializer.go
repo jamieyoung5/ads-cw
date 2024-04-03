@@ -9,33 +9,32 @@ const (
 	horizontalDivider = "-"
 	verticalDivider   = "|"
 	noValue           = "#"
+	resetStyle        = "\033[0m"
+	whiteBGBlack      = "\033[47m\033[30m" // White background, Black text
 )
 
-type Serializer struct {
-}
-
-func NewSerializer() *Serializer {
-	return &Serializer{}
-}
-
-func (s *Serializer) SerializeBoard(board [][]Tile) string {
+func SerializeBoard(board [][]Tile, pointerX int, pointerY int) string {
 	if len(board) == 0 || len(board[0]) == 0 {
 		return ""
 	}
 
 	var builder strings.Builder
-	rowDivider := s.createDivider(len(board[0])*4+1, horizontalDivider)
+	rowDivider := createDivider(len(board[0])*4+1, horizontalDivider)
 
 	builder.WriteString(rowDivider)
 	for rowIndex, row := range board {
-		s.serializeRow(&builder, row, rowIndex > 0 && row[0].SubGrid != board[rowIndex-1][0].SubGrid, rowDivider)
+		x := -1
+		if pointerY == rowIndex {
+			x = pointerX
+		}
+		serializeRow(&builder, row, rowIndex > 0 && row[0].SubGrid != board[rowIndex-1][0].SubGrid, rowDivider, x)
 	}
 	builder.WriteString(rowDivider)
 
 	return builder.String()
 }
 
-func (s *Serializer) serializeRow(builder *strings.Builder, row []Tile, needsDivider bool, rowDivider string) {
+func serializeRow(builder *strings.Builder, row []Tile, needsDivider bool, rowDivider string, pointerX int) {
 	if needsDivider {
 		builder.WriteString(rowDivider)
 	}
@@ -47,20 +46,28 @@ func (s *Serializer) serializeRow(builder *strings.Builder, row []Tile, needsDiv
 		} else {
 			builder.WriteString(" ")
 		}
-		s.serializeTile(builder, tile)
+		serializeTile(builder, tile, columnIndex == pointerX)
 		lastColumnSubGrid = tile.SubGrid
 	}
 	builder.WriteString(verticalDivider + "\n")
 }
 
-func (s *Serializer) serializeTile(builder *strings.Builder, tile Tile) {
+func serializeTile(builder *strings.Builder, tile Tile, selected bool) {
+	if selected {
+		builder.WriteString(whiteBGBlack)
+	}
+
 	if tile.Value == 0 {
 		builder.WriteString(" " + noValue + " ")
 	} else {
 		builder.WriteString(" " + strconv.Itoa(tile.Value) + " ")
 	}
+
+	if selected {
+		builder.WriteString(resetStyle)
+	}
 }
 
-func (s *Serializer) createDivider(length int, dividerSymbol string) string {
+func createDivider(length int, dividerSymbol string) string {
 	return strings.Repeat(dividerSymbol, length) + "\n"
 }
