@@ -13,7 +13,7 @@ const (
 	whiteBGBlack      = "\033[47m\033[30m" // White background, Black text
 )
 
-func SerializeBoard(board [][]Tile, pointerX int, pointerY int) string {
+func SerializeBoard(board [][]Tile, pointerX int, pointerY int, selectionColour string) string {
 	if len(board) == 0 || len(board[0]) == 0 {
 		return ""
 	}
@@ -27,14 +27,14 @@ func SerializeBoard(board [][]Tile, pointerX int, pointerY int) string {
 		if pointerY == rowIndex {
 			x = pointerX
 		}
-		serializeRow(&builder, row, rowIndex > 0 && row[0].SubGrid != board[rowIndex-1][0].SubGrid, rowDivider, x)
+		serializeRow(&builder, row, rowIndex > 0 && row[0].SubGrid != board[rowIndex-1][0].SubGrid, rowDivider, x, selectionColour)
 	}
 	builder.WriteString(rowDivider)
 
 	return builder.String()
 }
 
-func serializeRow(builder *strings.Builder, row []Tile, needsDivider bool, rowDivider string, pointerX int) {
+func serializeRow(builder *strings.Builder, row []Tile, needsDivider bool, rowDivider string, pointerX int, selectionColour string) {
 	if needsDivider {
 		builder.WriteString(rowDivider)
 	}
@@ -46,15 +46,15 @@ func serializeRow(builder *strings.Builder, row []Tile, needsDivider bool, rowDi
 		} else {
 			builder.WriteString(" ")
 		}
-		serializeTile(builder, tile, columnIndex == pointerX)
+		serializeTile(builder, tile, columnIndex == pointerX, selectionColour)
 		lastColumnSubGrid = tile.SubGrid
 	}
 	builder.WriteString(verticalDivider + "\n")
 }
 
-func serializeTile(builder *strings.Builder, tile Tile, selected bool) {
+func serializeTile(builder *strings.Builder, tile Tile, selected bool, selectionColour string) {
 	if selected {
-		builder.WriteString(whiteBGBlack)
+		builder.WriteString(selectionColour)
 	}
 
 	if tile.Value == 0 {

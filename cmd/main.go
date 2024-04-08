@@ -43,15 +43,29 @@ package main
 import (
 	"ads-cw/pkg/display"
 	"ads-cw/pkg/menu"
+	"ads-cw/pkg/sudoku_board"
 )
 
 func main() {
-	oldState, err := display.TerminalRawMode()
+	/*oldState, err := display.TerminalRawMode()
 	if err != nil {
 		panic(err)
 	}
-	defer display.RestoreTerminal(oldState)
+	defer display.RestoreTerminal(oldState)*/
 
-	display.Display(menu.Content, 0, 0)
-	display.Display(menu.Content, 0, 0)
+	gridMap := &display.ComponentNode{Component: sudoku_board.GenerateBoard(9)}
+	gridMap.Left = &display.ComponentNode{Component: menu.Content, Right: gridMap}
+	pointers := display.NewPointer(0, 0, display.StandardControls, gridMap)
+	gridMap.Pointer = pointers
+	gridMap.Left.Pointer = pointers
+
+	canvas := display.NewCanvas(gridMap, []*display.Pointer{pointers})
+	canvas.Print()
+	/*
+		testItem1 := "#####\n#   ##\n#   #\n#   #\n#   #\n#####"
+		testItem2 := "#####\n#   #\n##   #\n#   #\n#   #\n#####"
+
+		result := display.SideBySide([]string{testItem1, testItem2}, 4)
+
+		fmt.Printf(result)*/
 }
