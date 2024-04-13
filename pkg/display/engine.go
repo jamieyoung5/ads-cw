@@ -1,7 +1,11 @@
 package display
 
 import (
+	"bufio"
 	"fmt"
+	"os"
+	"os/exec"
+	"runtime"
 )
 
 const (
@@ -14,15 +18,77 @@ const (
 )
 
 type Canvas struct {
-	components *ComponentNode
+	components [][]*ComponentNode
 	pointers   []*Pointer
 }
 
-func NewCanvas(gridMap *ComponentNode, pointers []*Pointer) *Canvas {
+func NewCanvas(gridMap [][]*ComponentNode, pointers []*Pointer) *Canvas {
 	return &Canvas{
 		components: gridMap,
 		pointers:   pointers,
 	}
+}
+
+func (c *Canvas) Render() {
+	reader := bufio.NewReader(os.Stdin)
+	c.Print()
+
+	if runtime.GOOS != "windows" {
+		exec.Command("stty", "-f", "/dev/tty", "cbreak", "min", "1").Run()
+		exec.Command("stty", "-f", "/dev/tty", "-echo").Run()
+	}
+
+	for {
+		inputSequence, err := readKeySequence(reader)
+		if err != nil {
+			fmt.Println("Error reading from input:", err)
+			continue
+		}
+
+		for _, pointer := range c.pointers {
+			for action, controlSequence := range pointer.controls {
+				if equal(inputSequence, controlSequence) {
+					if action == enter {
+						c.components[pointer.Y][pointer.X].Component.Select(pointer)
+					} else {
+						fmt.Printf("Move action (%s) on pointer at Grid [%d, %d]\n", action, pointer.GridX, pointer.GridY)
+						// You can modify the pointer's position based on the action here.
+					}
+				}
+			}
+		}
+	}
+}
+
+func readKeySequence(reader *bufio.Reader) ([]byte, error) {
+	input, err := reader.ReadByte()
+	if err != nil {
+		return nil, err
+	}
+
+	keySequence := []byte{input}
+	if input == 27 { // ESC character, indicating the start of a control sequence
+		// Read the full sequence (assuming fixed length for simplicity)
+		for i := 0; i < 2; i++ {
+			if nextByte, err := reader.ReadByte(); err == nil {
+				keySequence = append(keySequence, nextByte)
+			}
+		}
+	}
+
+	return keySequence, nil
+}
+
+func equal(a, b []byte) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i, v := range a {
+		if v != b[i] {
+			return false
+		}
+	}
+	return true
 }
 
 /*

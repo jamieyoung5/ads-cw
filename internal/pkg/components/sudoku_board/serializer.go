@@ -1,6 +1,7 @@
 package sudoku_board
 
 import (
+	"ads-cw/pkg/display"
 	"strconv"
 	"strings"
 )
@@ -13,7 +14,7 @@ const (
 	whiteBGBlack      = "\033[47m\033[30m" // White background, Black text
 )
 
-func SerializeBoard(board [][]Tile, pointerX int, pointerY int, selectionColour string) string {
+func SerializeBoard(board [][]Tile, pointer *display.Pointer) string {
 	if len(board) == 0 || len(board[0]) == 0 {
 		return ""
 	}
@@ -24,10 +25,10 @@ func SerializeBoard(board [][]Tile, pointerX int, pointerY int, selectionColour 
 	builder.WriteString(rowDivider)
 	for rowIndex, row := range board {
 		x := -1
-		if pointerY == rowIndex {
-			x = pointerX
+		if pointer != nil && pointer.Y == rowIndex {
+			x = pointer.X
 		}
-		serializeRow(&builder, row, rowIndex > 0 && row[0].SubGrid != board[rowIndex-1][0].SubGrid, rowDivider, x, selectionColour)
+		serializeRow(&builder, row, rowIndex > 0 && row[0].SubGrid != board[rowIndex-1][0].SubGrid, rowDivider, x, pointer.SelectedTileColour)
 	}
 	builder.WriteString(rowDivider)
 

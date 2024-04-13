@@ -1,17 +1,19 @@
 package display
 
 const (
-	up    string = "up"
-	down  string = "down"
-	left  string = "left"
-	right string = "right"
+	up    = "up"
+	down  = "down"
+	left  = "left"
+	right = "right"
+	enter = "enter"
 )
 
-type Controls map[string]byte
+type Controls map[string][]byte
 
 var StandardControls = Controls{
-	up:    65,
-	down:  66,
-	right: 67,
-	left:  68,
+	up:    []byte{27, 91, 65}, // ESC [ A
+	down:  []byte{27, 91, 66}, // ESC [ B
+	right: []byte{27, 91, 67}, // ESC [ C
+	left:  []byte{27, 91, 68}, // ESC [ D
+	enter: []byte{13},         // Carriage return (might need to be adjusted based on your terminal)
 }

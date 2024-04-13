@@ -41,9 +41,9 @@ func main() {
 package main
 
 import (
+	"ads-cw/internal/pkg/components/menu"
+	"ads-cw/internal/pkg/components/sudoku_board"
 	"ads-cw/pkg/display"
-	"ads-cw/pkg/menu"
-	"ads-cw/pkg/sudoku_board"
 )
 
 func main() {
@@ -53,11 +53,16 @@ func main() {
 	}
 	defer display.RestoreTerminal(oldState)*/
 
-	gridMap := &display.ComponentNode{Component: sudoku_board.GenerateBoard(9)}
-	gridMap.Left = &display.ComponentNode{Component: menu.Content, Right: gridMap}
-	pointers := display.NewPointer(0, 0, display.StandardControls, gridMap)
-	gridMap.Pointer = pointers
-	gridMap.Left.Pointer = pointers
+	//gridMap := &display.ComponentNode{Component: sudoku_board.GenerateBoard(9)}
+	//gridMap.Left = &display.ComponentNode{Component: menu.Content, Right: gridMap}
+	gridMap := [][]*display.ComponentNode{
+		{
+			&display.ComponentNode{Component: menu.Content}, &display.ComponentNode{Component: sudoku_board.GenerateBoard(9)},
+		},
+	}
+
+	pointers := display.NewPointer(0, 0, display.StandardControls, 1, 0)
+	gridMap[0][1].Pointer = pointers
 
 	canvas := display.NewCanvas(gridMap, []*display.Pointer{pointers})
 	canvas.Print()

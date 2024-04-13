@@ -4,39 +4,18 @@ import (
 	"strings"
 )
 
-func draw(component *ComponentNode) string {
+func draw(components [][]*ComponentNode) string {
 	var builder strings.Builder
 
-	topLeftMostComponent := getTopLeftmostComponent(component)
-	drawRow(topLeftMostComponent, &builder)
-	for topLeftMostComponent.Down != nil {
-		drawRow(topLeftMostComponent.Down, &builder)
-		builder.WriteString("\n\n")
-		topLeftMostComponent = topLeftMostComponent.Down
+	for _, row := range components {
+		var items []string
+		for _, componentNode := range row {
+			items = append(items, componentNode.Component.Serialize(componentNode.Pointer))
+		}
+		// Draw each row of components side by side, with a specified number of spaces in between
+		builder.WriteString(SideBySide(items, 4))
+		builder.WriteString("\n\n") // Add spacing between rows
 	}
 
 	return builder.String()
-}
-
-func drawRow(component *ComponentNode, builder *strings.Builder) {
-	items := []string{component.Component.Serialize(component.Pointer.x, component.Pointer.y, component.Pointer.selectedTileColour)}
-
-	for component.Right != nil {
-		items = append(items, component.Right.Component.Serialize(component.Right.Pointer.x, component.Right.Pointer.y, component.Right.Pointer.selectedTileColour))
-		component = component.Right
-	}
-
-	builder.WriteString(SideBySide(items, 4))
-}
-
-func getTopLeftmostComponent(component *ComponentNode) *ComponentNode {
-	for component.Up != nil {
-		component = component.Up
-	}
-
-	for component.Left != nil {
-		component = component.Left
-	}
-
-	return component
 }

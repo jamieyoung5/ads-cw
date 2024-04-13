@@ -1,10 +1,10 @@
 package menu
 
 import (
-	"ads-cw/internal/pkg/classic"
-	"ads-cw/internal/pkg/game_history"
-	"ads-cw/internal/pkg/time_trials"
-	"ads-cw/internal/pkg/two_player"
+	"ads-cw/internal/pkg/gamemodes/classic"
+	"ads-cw/internal/pkg/gamemodes/game_history"
+	"ads-cw/internal/pkg/gamemodes/time_trials"
+	"ads-cw/internal/pkg/gamemodes/two_player"
 )
 
 var Content = Menu{

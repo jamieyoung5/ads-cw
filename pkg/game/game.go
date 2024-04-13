@@ -1,7 +1,7 @@
 package game
 
 import (
-	"ads-cw/pkg/menu"
+	"ads-cw/internal/pkg/components/menu"
 	"bufio"
 	"fmt"
 	"os"

@@ -6,35 +6,37 @@ const (
 )
 
 type Pointer struct {
-	x                  int
-	y                  int
+	X                  int
+	Y                  int
 	controls           Controls
-	selectedComponent  *ComponentNode
-	selectedTileColour string
+	GridX              int
+	GridY              int
+	SelectedTileColour string
 }
 
-func NewPointer(x int, y int, controls Controls, selectedComponent *ComponentNode) *Pointer {
+func NewPointer(x int, y int, controls Controls, gridX int, gridY int) *Pointer {
 	return &Pointer{
-		x:                  x,
-		y:                  y,
+		X:                  x,
+		Y:                  y,
 		controls:           controls,
-		selectedComponent:  selectedComponent,
-		selectedTileColour: whiteBGBlack,
+		GridX:              gridX,
+		GridY:              gridY,
+		SelectedTileColour: whiteBGBlack,
 	}
 }
 
 func (p *Pointer) Up() {
-	p.y--
+	p.Y--
 }
 
 func (p *Pointer) Down() {
-	p.y++
+	p.Y++
 }
 
 func (p *Pointer) Right() {
-	p.x++
+	p.X++
 }
 
 func (p *Pointer) Left() {
-	p.x--
+	p.X--
 }
