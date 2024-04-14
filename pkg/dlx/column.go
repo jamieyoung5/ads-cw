@@ -6,6 +6,7 @@ type Column struct {
 	Size int
 }
 
+// Cover unlinks the column and rows that have a node in that column from the rest of the matrix
 func (c *Column) Cover() {
 	c.Left.Right = c.Right
 	c.Right.Left = c.Left
@@ -19,6 +20,7 @@ func (c *Column) Cover() {
 	}
 }
 
+// Uncover re-links the column and respective rows to the rest of the matrix
 func (c *Column) Uncover() {
 	for node := c.Up; node != c.Node; node = node.Up {
 		for rowNode := node.Left; rowNode != node; rowNode = rowNode.Left {

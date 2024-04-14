@@ -107,3 +107,54 @@ func (m *Matrix) AppendRow(columnIds []string) {
 		}
 	}
 }
+
+func (m *Matrix) Search(solution []*Node, solutions *[][]*Node) {
+	// Check if there are no more columns to cover
+	if m.Root.Right == m.Root {
+		// All columns are covered, hence a solution is found
+		// Copy the solution to avoid referencing the same slice
+		solved := make([]*Node, len(solution))
+		copy(solved, solution)
+		*solutions = append(*solutions, solved)
+		return
+	}
+
+	// Choose the column with the fewest nodes to minimize the branching factor
+	c := m.getColumnWithFewestNodes()
+
+	c.Cover()
+
+	for r := c.Down; r != c.Node; r = r.Down {
+		solution = append(solution, r)
+
+		// Cover all columns in this row
+		for j := r.Right; j != r; j = j.Right {
+			j.Column.Cover()
+		}
+
+		m.Search(solution, solutions)
+
+		// Uncover all columns in this row for backtracking
+		for j := r.Left; j != r; j = j.Left {
+			j.Column.Uncover()
+		}
+
+		// Remove the row from the solution set
+		solution = solution[:len(solution)-1]
+	}
+
+	c.Uncover()
+}
+
+// getColumnWithFewestNodes get the smallest column in the matrix
+func (m *Matrix) getColumnWithFewestNodes() *Column {
+	minSize := int(^uint(0) >> 1) // Max int value
+	chosenColumn := m.Root.Right.Column
+	for c := m.Root.Right; c != m.Root; c = c.Right {
+		if c.Column.Size < minSize {
+			minSize = c.Column.Size
+			chosenColumn = c.Column
+		}
+	}
+	return chosenColumn
+}
