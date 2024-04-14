@@ -41,9 +41,7 @@ func main() {
 package main
 
 import (
-	"ads-cw/internal/pkg/components/menu"
-	"ads-cw/internal/pkg/components/sudoku_board"
-	"ads-cw/pkg/display"
+	"ads-cw/pkg/dlx"
 )
 
 func main() {
@@ -55,7 +53,7 @@ func main() {
 
 	//gridMap := &display.ComponentNode{Component: sudoku_board.GenerateBoard(9)}
 	//gridMap.Left = &display.ComponentNode{Component: menu.Content, Right: gridMap}
-	gridMap := [][]*display.ComponentNode{
+	/*gridMap := [][]*display.ComponentNode{
 		{
 			&display.ComponentNode{Component: menu.Content}, &display.ComponentNode{Component: sudoku_board.GenerateBoard(9)},
 		},
@@ -65,7 +63,13 @@ func main() {
 	gridMap[0][1].Pointer = pointers
 
 	canvas := display.NewCanvas(gridMap, []*display.Pointer{pointers})
-	canvas.Print()
+	canvas.Print()*/
+	matrix := dlx.NewMatrix([]string{"column1", "column2", "column3"})
+	matrix.AppendRow([]string{"column1", "column2", "column3"})
+	matrix.AppendRow([]string{"column1", "column3"})
+	matrix.AppendRow([]string{"column3"})
+	dlx.PrintMatrix(matrix)
+
 	/*
 		testItem1 := "#####\n#   ##\n#   #\n#   #\n#   #\n#####"
 		testItem2 := "#####\n#   #\n##   #\n#   #\n#   #\n#####"
