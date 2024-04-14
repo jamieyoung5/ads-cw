@@ -42,6 +42,7 @@ package main
 
 import (
 	"ads-cw/pkg/dlx"
+	"fmt"
 )
 
 func main() {
@@ -68,8 +69,14 @@ func main() {
 	matrix.AppendRow([]string{"column1", "column2", "column3"})
 	matrix.AppendRow([]string{"column1", "column3"})
 	matrix.AppendRow([]string{"column3"})
-	dlx.PrintMatrix(matrix)
-
+	matrix.PrintMatrix()
+	fmt.Println("-----------------------------------------------")
+	column := matrix.Root.Right.Right.Column
+	column.Cover()
+	matrix.PrintMatrix()
+	fmt.Println("---------------------------------------------")
+	column.Uncover()
+	matrix.PrintMatrix()
 	/*
 		testItem1 := "#####\n#   ##\n#   #\n#   #\n#   #\n#####"
 		testItem2 := "#####\n#   #\n##   #\n#   #\n#   #\n#####"

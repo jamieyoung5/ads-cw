@@ -17,12 +17,6 @@ type Node struct {
 	Column                *Column
 }
 
-type Column struct {
-	*Node
-	ID   string
-	Size int
-}
-
 // NewMatrix generates columns and each columns' respective header node
 func NewMatrix(columnIDs []string) *Matrix {
 	root := &Column{Node: &Node{}}
