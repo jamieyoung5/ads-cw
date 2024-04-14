@@ -2,73 +2,65 @@ package sudoku_board
 
 import (
 	"ads-cw/pkg/display"
-	"strconv"
+	"fmt"
 	"strings"
 )
 
 const (
-	horizontalDivider = "-"
-	verticalDivider   = "|"
-	noValue           = "#"
-	resetStyle        = "\033[0m"
-	whiteBGBlack      = "\033[47m\033[30m" // White background, Black text
+	verticalDividerSymbol     = "-"
+	horizontalDividerSymbol   = "|"
+	crossSectionDividerSymbol = "+"
+	noValueSymbol             = "."
+	resetStyle                = "\033[0m"          // anything after this will have no custom colouring applied
+	whiteBGBlack              = "\033[47m\033[30m" // White background, Black text
 )
 
-func SerializeBoard(board [][]Tile, pointer *display.Pointer) string {
-	if len(board) == 0 || len(board[0]) == 0 {
-		return ""
-	}
-
-	var builder strings.Builder
-	rowDivider := createDivider(len(board[0])*4+1, horizontalDivider)
-
-	builder.WriteString(rowDivider)
-	for rowIndex, row := range board {
-		x := -1
-		if pointer != nil && pointer.Y == rowIndex {
-			x = pointer.X
+func SerializeBoard(board [][]int, gridSize int, pointer *display.Pointer) string {
+	var sb strings.Builder
+	for y, row := range board {
+		if y%gridSize == 0 && y != 0 {
+			sb.WriteString(createVerticalDivider(gridSize))
 		}
-		serializeRow(&builder, row, rowIndex > 0 && row[0].SubGrid != board[rowIndex-1][0].SubGrid, rowDivider, x, pointer.SelectedTileColour)
-	}
-	builder.WriteString(rowDivider)
+		for x, val := range row {
+			if x%gridSize == 0 && x != 0 {
+				sb.WriteString(horizontalDividerSymbol + " ")
+			}
 
-	return builder.String()
-}
+			func() {
+				defer sb.WriteString(" ")
+				if x == pointer.X && y == pointer.Y {
+					defer sb.WriteString(resetStyle)
+					sb.WriteString(pointer.SelectedTileColour)
+				}
 
-func serializeRow(builder *strings.Builder, row []Tile, needsDivider bool, rowDivider string, pointerX int, selectionColour string) {
-	if needsDivider {
-		builder.WriteString(rowDivider)
-	}
-
-	var lastColumnSubGrid = -1
-	for columnIndex, tile := range row {
-		if columnIndex == 0 || tile.SubGrid != lastColumnSubGrid {
-			builder.WriteString(verticalDivider)
-		} else {
-			builder.WriteString(" ")
+				if val == 0 {
+					sb.WriteString(noValueSymbol)
+				} else {
+					sb.WriteString(fmt.Sprintf("%d", val))
+				}
+			}()
 		}
-		serializeTile(builder, tile, columnIndex == pointerX, selectionColour)
-		lastColumnSubGrid = tile.SubGrid
+		sb.WriteString("\n")
 	}
-	builder.WriteString(verticalDivider + "\n")
+	return sb.String()
 }
 
-func serializeTile(builder *strings.Builder, tile Tile, selected bool, selectionColour string) {
-	if selected {
-		builder.WriteString(selectionColour)
+func createVerticalDivider(gridSize int) (divider string) {
+
+	squareDivider := createLine(gridSize * 2)
+	divider = squareDivider
+
+	for i := 0; i < gridSize-2; i++ {
+		divider += crossSectionDividerSymbol + squareDivider + verticalDividerSymbol
 	}
 
-	if tile.Value == 0 {
-		builder.WriteString(" " + noValue + " ")
-	} else {
-		builder.WriteString(" " + strconv.Itoa(tile.Value) + " ")
-	}
-
-	if selected {
-		builder.WriteString(resetStyle)
-	}
+	return divider + crossSectionDividerSymbol + squareDivider + "\n"
 }
 
-func createDivider(length int, dividerSymbol string) string {
-	return strings.Repeat(dividerSymbol, length) + "\n"
+func createLine(length int) (line string) {
+	for i := 0; i < length; i++ {
+		line += verticalDividerSymbol
+	}
+
+	return line
 }

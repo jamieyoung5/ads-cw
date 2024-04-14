@@ -1,11 +1,7 @@
 package display
 
 import (
-	"bufio"
 	"fmt"
-	"os"
-	"os/exec"
-	"runtime"
 )
 
 const (
@@ -29,6 +25,7 @@ func NewCanvas(gridMap [][]*ComponentNode, pointers []*Pointer) *Canvas {
 	}
 }
 
+/*
 func (c *Canvas) Render() {
 	reader := bufio.NewReader(os.Stdin)
 	c.Print()
