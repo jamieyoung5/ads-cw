@@ -1,6 +1,11 @@
 package dlx
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
+
+const maxSolutions = math.MaxInt8
 
 type Matrix struct {
 	Root *Node
@@ -109,6 +114,10 @@ func (m *Matrix) AppendRow(columnIds []string) {
 }
 
 func (m *Matrix) Search(solution []*Node, solutions *[][]*Node) {
+	if len(*solutions) >= maxSolutions {
+		return
+	}
+
 	// Check if there are no more columns to cover
 	if m.Root.Right == m.Root {
 		// All columns are covered, hence a solution is found

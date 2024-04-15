@@ -17,5 +17,5 @@ func run(size int) {
 	for {
 		x, y = display.Display(board, x, y)
 	}*/
-	fmt.Print("hi mom")
+	fmt.Println("hi mom")
 }

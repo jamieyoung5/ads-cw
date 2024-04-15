@@ -25,9 +25,10 @@ func (m Menu) GetDimensions() (height int, width int) {
 	return 4, 1
 }
 
-func (m Menu) Select(pointer *display.Pointer, keyCode byte) (exit bool, err error) {
-	if keyCode == 10 {
+func (m Menu) Select(pointer *display.Pointer, keyCode []byte) (exit bool, err error) {
+	if keyCode[0] == 10 {
 		if len(m) > pointer.Y {
+
 			m[pointer.Y].Runner()
 			return true, nil
 		} else {

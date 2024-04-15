@@ -2,6 +2,10 @@ module ads-cw
 
 go 1.21
 
-require github.com/hectane/go-acl v0.0.0-20230122075934-ca0b05cb1adb
+require github.com/stretchr/testify v1.9.0
 
-require golang.org/x/sys v0.0.0-20190529164535-6a60838ec259 // indirect
+require (
+	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
+)

@@ -42,7 +42,6 @@ package main
 
 import (
 	"ads-cw/internal/pkg/components/sudoku_board"
-	"ads-cw/pkg/display"
 	"fmt"
 )
 
@@ -51,34 +50,41 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	defer display.RestoreTerminal(oldState)*/
+	defer display.RestoreTerminal(oldState)
 
 	//gridMap := &display.ComponentNode{Component: sudoku_board.GenerateBoard(9)}
 	//gridMap.Left = &display.ComponentNode{Component: menu.Content, Right: gridMap}
-	/*gridMap := [][]*display.ComponentNode{
+	gridMap := [][]*display.ComponentNode{
 		{
-			&display.ComponentNode{Component: menu.Content}, &display.ComponentNode{Component: sudoku_board.GenerateBoard(9)},
+			&display.ComponentNode{Component: sudoku_board.GenerateBoard(9)},
 		},
 	}
 
-	pointers := display.NewPointer(0, 0, display.StandardControls, 1, 0)
-	gridMap[0][1].Pointer = pointers
+	pointer := display.NewPointer(0, 0, display.StandardControls, 0, 0)
+	gridMap[0][0].Pointer = pointer
 
-	canvas := display.NewCanvas(gridMap, []*display.Pointer{pointers})
-	canvas.Print()
-	matrix := dlx.NewMatrix([]string{"column1", "column2", "column3"})
-	matrix.AppendRow([]string{"column1", "column2", "column3"})
-	matrix.AppendRow([]string{"column1", "column3"})
-	matrix.AppendRow([]string{"column3"})
-	matrix.PrintMatrix()
-	fmt.Println("-----------------------------------------------")
-	column := matrix.Root.Right.Right.Column
-	column.Cover()
-	matrix.PrintMatrix()
-	fmt.Println("---------------------------------------------")
-	column.Uncover()
-	matrix.PrintMatrix()*/
-	board, err := sudoku_board.NewBoard([][]int{
+	canvas := display.NewCanvas(gridMap, []*display.Pointer{pointer})
+	canvas.Render()*/
+
+	board := sudoku_board.GenerateBoard(9)
+	fmt.Println(board)
+	/*
+		board, _ := sudoku_board.NewBoard([][]int{
+			{5, 3, 0, 0, 7, 0, 0, 0, 0},
+			{6, 0, 0, 1, 9, 5, 0, 0, 0},
+			{0, 9, 8, 0, 0, 0, 0, 6, 0},
+			{8, 0, 0, 0, 6, 0, 0, 0, 3},
+			{4, 0, 0, 8, 0, 3, 0, 0, 1},
+			{7, 0, 0, 0, 2, 0, 0, 0, 6},
+			{0, 6, 0, 0, 0, 0, 2, 8, 0},
+			{0, 0, 0, 4, 1, 9, 0, 0, 5},
+			{0, 0, 0, 0, 8, 0, 0, 7, 9},
+		})
+		valid, end := board.Validate()
+		fmt.Println(valid)
+		fmt.Println(end)*/
+
+	/*board, err := sudoku_board.NewBoard([][]int{
 		{5, 3, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 		{6, 0, 0, 1, 9, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 		{0, 9, 8, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -105,11 +111,23 @@ func main() {
 		{0, 0, 0, 0, 8, 0, 0, 7, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 		{0, 0, 0, 0, 8, 0, 0, 7, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	})
+	[][]int{
+		{5, 3, 4, 6, 7, 8, 9, 1, 2},
+		{6, 7, 2, 1, 9, 5, 3, 4, 8},
+		{1, 9, 8, 3, 4, 2, 5, 6, 7},
+		{8, 5, 9, 7, 6, 1, 4, 2, 3},
+		{4, 2, 6, 8, 5, 3, 7, 9, 1},
+		{7, 1, 3, 9, 2, 4, 8, 5, 6},
+		{9, 6, 1, 5, 3, 7, 2, 8, 4},
+		{2, 8, 7, 4, 1, 9, 6, 3, 5},
+		{3, 4, 5, 2, 8, 6, 1, 7, 9},
+	}
+
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	board.Print(&display.Pointer{Y: 1, X: 1, SelectedTileColour: "\033[47m\033[30m"})
+	board.Print(&display.Pointer{Y: 1, X: 1, SelectedTileColour: "\033[47m\033[30m"})*/
 	/*
 		testItem1 := "#####\n#   ##\n#   #\n#   #\n#   #\n#####"
 		testItem2 := "#####\n#   #\n##   #\n#   #\n#   #\n#####"

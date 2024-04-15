@@ -1,7 +1,11 @@
 package display
 
 import (
+	"bufio"
 	"fmt"
+	"os"
+	"os/exec"
+	"runtime"
 )
 
 const (
@@ -25,14 +29,16 @@ func NewCanvas(gridMap [][]*ComponentNode, pointers []*Pointer) *Canvas {
 	}
 }
 
-/*
 func (c *Canvas) Render() {
 	reader := bufio.NewReader(os.Stdin)
 	c.Print()
 
+	// Set terminal to raw mode to properly handle key presses
 	if runtime.GOOS != "windows" {
 		exec.Command("stty", "-f", "/dev/tty", "cbreak", "min", "1").Run()
 		exec.Command("stty", "-f", "/dev/tty", "-echo").Run()
+	} else {
+		// Windows terminal settings should be adjusted if necessary
 	}
 
 	for {
@@ -42,18 +48,32 @@ func (c *Canvas) Render() {
 			continue
 		}
 
+		fmt.Println("Debug: Key sequence received:", inputSequence) // Debugging output
+
 		for _, pointer := range c.pointers {
 			for action, controlSequence := range pointer.controls {
-				if equal(inputSequence, controlSequence) {
-					if action == enter {
-						c.components[pointer.Y][pointer.X].Component.Select(pointer)
+				if equal(inputSequence, controlSequence.Sequence) {
+					if !controlSequence.Movement {
+						c.components[pointer.GridY][pointer.GridX].Component.Select(pointer, controlSequence.Sequence)
 					} else {
-						fmt.Printf("Move action (%s) on pointer at Grid [%d, %d]\n", action, pointer.GridX, pointer.GridY)
-						// You can modify the pointer's position based on the action here.
+						switch action {
+						case up:
+							pointer.Up()
+						case down:
+							pointer.Down()
+						case left:
+							pointer.Left()
+						case right:
+							pointer.Right()
+						}
 					}
+					break // Assuming one key action per loop is sufficient
 				}
 			}
 		}
+
+		fmt.Print("\033[H\033[2J\033[3J") // Clear screen and scrollback buffer
+		c.Print()
 	}
 }
 
