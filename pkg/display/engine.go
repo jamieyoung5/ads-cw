@@ -73,25 +73,25 @@ func (c *Canvas) ListenForInput(state *State, reader *bufio.Reader) {
 			height, width := state.Components[pointer.GridY][pointer.GridX].Component.GetDimensions()
 			if macro, ok := pointer.controls[Encode(inputSequence)]; ok {
 				switch macro {
-				case up:
+				case Up:
 					if pointer.Y > 0 {
 						pointer.Up()
 					}
-				case down:
+				case Down:
 					if pointer.Y < height-1 {
 						pointer.Down()
 					}
-				case left:
+				case Left:
 					if pointer.X > 0 {
 						pointer.Left()
 					}
-				case right:
+				case Right:
 					if pointer.X < width-1 {
 						pointer.Right()
 					}
-				default:
+				case Undo, Redo, One, Two, Three, Four, Five, Six, Seven, Eight, Nine, Selected, Clear:
 					//If the user isnt moving around the board but they pressed a control, execute components action
-					nextState, exit := state.Components[pointer.GridY][pointer.GridX].Component.Select(pointer, inputSequence)
+					nextState, exit := state.Components[pointer.GridY][pointer.GridX].Component.Select(pointer, macro)
 					c.Print()
 
 					// current state is finished

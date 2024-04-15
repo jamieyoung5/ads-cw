@@ -13,7 +13,7 @@ func (c *Canvas) draw(quit chan bool) {
 		case <-quit:
 			return
 		default:
-			time.Sleep(1 * time.Second)
+			time.Sleep(time.Millisecond * 500)
 			newState := c.serialize()
 			if newState != state {
 				fmt.Print("\033[H\033[2J\033[3J")

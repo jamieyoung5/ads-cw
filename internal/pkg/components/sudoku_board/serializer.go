@@ -20,6 +20,7 @@ const (
 
 func (b *Board) serializeBoard(pointer *display.Pointer) string {
 	var sb strings.Builder
+
 	for y, row := range b.Content {
 		if y%b.subGridSize == 0 && y != 0 {
 			sb.WriteString(createVerticalDivider(b.subGridSize))
@@ -60,6 +61,11 @@ func (b *Board) serializeBoard(pointer *display.Pointer) string {
 		}
 		sb.WriteString("\n")
 	}
+
+	sb.WriteString(invalidCell)
+	sb.WriteString(b.footerMessage)
+	sb.WriteString(resetStyle)
+
 	return sb.String()
 }
 

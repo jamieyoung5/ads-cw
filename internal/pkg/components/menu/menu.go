@@ -24,8 +24,8 @@ func (m Menu) GetDimensions() (height int, width int) {
 	return 4, 1
 }
 
-func (m Menu) Select(pointer *display.Pointer, keyCode []byte) (*display.State, bool) {
-	if keyCode[0] == 10 {
+func (m Menu) Select(pointer *display.Pointer, macro string) (*display.State, bool) {
+	if macro == display.Selected {
 		if len(m) < pointer.Y {
 			pointer.Y = len(m) - 1
 		}

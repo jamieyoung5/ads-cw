@@ -5,6 +5,8 @@ import (
 	"ads-cw/pkg/dlx"
 	"fmt"
 	"math"
+	"strconv"
+	"time"
 )
 
 type Board struct {
@@ -13,6 +15,7 @@ type Board struct {
 	emptyCells        int
 	size              int
 	subGridSize       int
+	footerMessage     string
 	invalidPlacements map[[2]int]struct{}
 }
 
@@ -59,26 +62,48 @@ func (b *Board) GetDimensions() (height, width int) {
 	return len(b.Content), len(b.Content[0])
 }
 
-func (b *Board) Select(pointer *display.Pointer, keyCode []byte) (*display.State, bool) {
+func (b *Board) Select(pointer *display.Pointer, macro string) (*display.State, bool) {
+	b.footerMessage = ""
 
 	if b.initialBoard[pointer.Y][pointer.X] != 0 {
-		//TODO: show error message telling user they cant edit static, pre-set cells!
+		b.footerMessage = "cannot edit pre-set static cells!"
 		return nil, false
 	}
 
-	//TODO: allow for edits between 1 and beyond if they fit the board size
-	if keyCode[0] >= '1' && keyCode[0] <= '9' {
-		if b.Content[pointer.Y][pointer.X] == 0 {
-			b.emptyCells--
+	if macro == display.Clear {
+		b.emptyCells++
+		b.Content[pointer.Y][pointer.X] = 0
+		delete(b.invalidPlacements, [2]int{pointer.Y, pointer.X})
+		return nil, false
+	}
+
+	// check if there is space for the new value
+	if b.Content[pointer.Y][pointer.X] != 0 {
+		if len(strconv.Itoa(b.size)) < len(strconv.Itoa(b.Content[pointer.Y][pointer.X]))+1 {
+			return nil, false
 		}
-		b.Content[pointer.Y][pointer.X] = int(keyCode[0] - '0')
+	}
+
+	if isOneToNine(macro) {
+		convertedNewValue, _ := strconv.Atoi(strconv.Itoa(b.Content[pointer.Y][pointer.X]) + macro)
+		if convertedNewValue > b.size {
+			b.footerMessage = fmt.Sprintf("max cell value is %d", convertedNewValue)
+			return nil, false
+		}
+
+		b.emptyCells--
+
+		b.Content[pointer.Y][pointer.X] = convertedNewValue
 		valid, end := b.Validate()
 		if end {
+			b.footerMessage = "Board complete! You win!"
+			time.Sleep(5 * time.Second)
 			return nil, true
 		}
 
 		if !valid {
 			b.invalidPlacements[[2]int{pointer.Y, pointer.X}] = struct{}{}
+			b.footerMessage = "placement has led to no possible solutions"
 			return nil, false
 		} else {
 			delete(b.invalidPlacements, [2]int{pointer.Y, pointer.X})
@@ -87,7 +112,7 @@ func (b *Board) Select(pointer *display.Pointer, keyCode []byte) (*display.State
 
 	}
 
-	//TODO: show error message telling user they can only edit a tile to a number between 1 and {size}
+	b.footerMessage = "cell inputs must be a number!"
 	return nil, false
 }
 
@@ -132,4 +157,12 @@ func (b *Board) IsValidSolution() bool {
 func isPerfectSquare(n int) bool {
 	sqrt := int(math.Sqrt(float64(n)))
 	return sqrt*sqrt == n
+}
+
+func isOneToNine(s string) bool {
+	if len(s) != 1 {
+		return false
+	}
+	num, err := strconv.Atoi(s)
+	return err == nil && num >= 1 && num <= 9
 }

@@ -9,5 +9,5 @@ type Component interface {
 	GetDimensions() (height int, width int)
 	Print(pointer *Pointer)
 	Serialize(pointer *Pointer) string
-	Select(pointer *Pointer, keyCode []byte) (state *State, exit bool)
+	Select(pointer *Pointer, macro string) (state *State, exit bool)
 }
