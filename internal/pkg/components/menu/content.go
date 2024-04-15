@@ -7,7 +7,7 @@ import (
 	"ads-cw/internal/pkg/gamemodes/two_player"
 )
 
-var Content = Menu{
+var MainMenu = Menu{
 	{
 		Name:    "Classic Sudoku",
 		Summary: "classic sudoku! fill in a board with numbers without repeating any in rows, columns, or regions",

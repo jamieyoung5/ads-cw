@@ -9,11 +9,12 @@ import (
 )
 
 type Board struct {
-	Content      [][]int
-	initialBoard [][]int
-	emptyCells   int
-	size         int
-	subGridSize  int
+	Content           [][]int
+	initialBoard      [][]int
+	emptyCells        int
+	size              int
+	subGridSize       int
+	invalidPlacements map[[2]int]struct{}
 }
 
 func NewBoard(board [][]int) (*Board, error) {
@@ -30,9 +31,14 @@ func NewBoard(board [][]int) (*Board, error) {
 			}
 		}
 	}
-
 	subGridSize := int(math.Sqrt(float64(verticalSize)))
-	return &Board{Content: board, initialBoard: board, emptyCells: emptyCells, size: verticalSize, subGridSize: subGridSize}, nil
+	initialBoardCopy := make([][]int, len(board))
+	for i := range board {
+		initialBoardCopy[i] = make([]int, len(board[i]))
+		copy(initialBoardCopy[i], board[i])
+	}
+
+	return &Board{Content: board, initialBoard: initialBoardCopy, emptyCells: emptyCells, size: verticalSize, subGridSize: subGridSize, invalidPlacements: make(map[[2]int]struct{})}, nil
 }
 
 func (b *Board) Print(pointer *display.Pointer) {
@@ -40,7 +46,7 @@ func (b *Board) Print(pointer *display.Pointer) {
 }
 
 func (b *Board) Serialize(pointer *display.Pointer) string {
-	return SerializeBoard(b.Content, b.subGridSize, pointer)
+	return b.serializeBoard(pointer)
 }
 
 func (b *Board) GetDimensions() (height, width int) {
@@ -48,6 +54,7 @@ func (b *Board) GetDimensions() (height, width int) {
 }
 
 func (b *Board) Select(pointer *display.Pointer, keyCode []byte) (exit bool, err error) {
+
 	if b.initialBoard[pointer.Y][pointer.X] != 0 {
 		return false, errors.New("you cannot edit a pre-set cell")
 	}
@@ -63,10 +70,13 @@ func (b *Board) Select(pointer *display.Pointer, keyCode []byte) (exit bool, err
 		}
 
 		if !valid {
-			err = errors.New("invalid placement")
+			b.invalidPlacements[[2]int{pointer.Y, pointer.X}] = struct{}{}
+			return false, errors.New("invalid placement")
+		} else {
+			delete(b.invalidPlacements, [2]int{pointer.Y, pointer.X})
+			return false, err
 		}
 
-		return false, err
 	}
 
 	return false, errors.New("you can only change a tile to a number between 1 and 9")
@@ -82,8 +92,6 @@ func (b *Board) Validate() (validBoard bool, boardSolved bool) {
 
 	results := make([][]*dlx.Node, 0)
 	matrix.Search([]*dlx.Node{}, &results)
-	s, _ := solutionToBoard(results[0], b.size)
-	fmt.Println(SerializeBoard(s, b.subGridSize, &display.Pointer{X: 1, Y: 1, SelectedTileColour: ""}))
 	if len(results) == 0 {
 		return false, false
 	}

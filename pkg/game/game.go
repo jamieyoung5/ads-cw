@@ -2,10 +2,7 @@ package game
 
 import (
 	"ads-cw/internal/pkg/components/menu"
-	"bufio"
-	"fmt"
-	"os"
-	"strconv"
+	"ads-cw/pkg/display"
 )
 
 type Sudoku struct {
@@ -16,17 +13,23 @@ func NewSudoku() *Sudoku {
 }
 
 func (s *Sudoku) Play() {
+	oldState, err := display.TerminalRawMode()
+	if err != nil {
+		panic(err)
+	}
+	defer display.RestoreTerminal(oldState)
+
 	for {
-		menu.Content.Display()
-		reader := bufio.NewReader(os.Stdin)
-		fmt.Print("Choose an option: ")
-		input, _ := reader.ReadString('\n')
-		menuItem, err := strconv.Atoi(input)
-		if err != nil {
-			fmt.Println("Invalid input")
-			continue
+		grid := [][]*display.ComponentNode{
+			{
+				&display.ComponentNode{Component: menu.MainMenu},
+			},
 		}
 
-		menu.Content[menuItem].Runner()
+		pointer := display.NewPointer(0, 0, display.MenuControls, 0, 0)
+		grid[0][0].Pointer = pointer
+
+		canvas := display.NewCanvas(grid, []*display.Pointer{pointer})
+		canvas.Render()
 	}
 }

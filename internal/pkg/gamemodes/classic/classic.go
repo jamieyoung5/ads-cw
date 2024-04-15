@@ -1,6 +1,9 @@
 package classic
 
-import "fmt"
+import (
+	"ads-cw/internal/pkg/components/sudoku_board"
+	"ads-cw/pkg/display"
+)
 
 func Play() {
 	size := config()
@@ -12,10 +15,17 @@ func config() (size int) {
 }
 
 func run(size int) {
-	/*board := sudoku_board.GenerateBoard(size)
-	var x, y int
-	for {
-		x, y = display.Display(board, x, y)
-	}*/
-	fmt.Println("hi mom")
+	board := sudoku_board.CreateNearlyComplete9x9TestBoard()
+	gridMap := [][]*display.ComponentNode{
+		{
+
+			&display.ComponentNode{Component: board},
+		},
+	}
+
+	pointer := display.NewPointer(0, 0, display.SudokuControls, 0, 0)
+	gridMap[0][0].Pointer = pointer
+
+	canvas := display.NewCanvas(gridMap, []*display.Pointer{pointer})
+	canvas.Render()
 }

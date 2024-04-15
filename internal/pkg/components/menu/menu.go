@@ -7,15 +7,15 @@ import (
 	"strings"
 )
 
-type GamemodeRunner func()
+type Action func()
 
-type Gamemode struct {
+type Item struct {
 	Name    string
 	Summary string
-	Runner  GamemodeRunner
+	Runner  Action
 }
 
-type Menu [4]*Gamemode
+type Menu [4]*Item
 
 func (m Menu) Print(pointer *display.Pointer) {
 	fmt.Printf(m.Serialize(pointer))

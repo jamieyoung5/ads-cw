@@ -41,50 +41,38 @@ func main() {
 package main
 
 import (
-	"ads-cw/internal/pkg/components/sudoku_board"
-	"fmt"
+	"ads-cw/pkg/display"
+	"ads-cw/pkg/game"
 )
 
 func main() {
-	/*oldState, err := display.TerminalRawMode()
+	oldState, err := display.TerminalRawMode()
 	if err != nil {
 		panic(err)
 	}
 	defer display.RestoreTerminal(oldState)
 
-	//gridMap := &display.ComponentNode{Component: sudoku_board.GenerateBoard(9)}
-	//gridMap.Left = &display.ComponentNode{Component: menu.Content, Right: gridMap}
-	gridMap := [][]*display.ComponentNode{
-		{
-			&display.ComponentNode{Component: sudoku_board.GenerateBoard(9)},
-		},
-	}
+	sudoku := game.NewSudoku()
+	sudoku.Play()
+}
 
-	pointer := display.NewPointer(0, 0, display.StandardControls, 0, 0)
-	gridMap[0][0].Pointer = pointer
+/*
+	board, _ := sudoku_board.NewBoard([][]int{
+		{5, 3, 0, 0, 7, 0, 0, 0, 0},
+		{6, 0, 0, 1, 9, 5, 0, 0, 0},
+		{0, 9, 8, 0, 0, 0, 0, 6, 0},
+		{8, 0, 0, 0, 6, 0, 0, 0, 3},
+		{4, 0, 0, 8, 0, 3, 0, 0, 1},
+		{7, 0, 0, 0, 2, 0, 0, 0, 6},
+		{0, 6, 0, 0, 0, 0, 2, 8, 0},
+		{0, 0, 0, 4, 1, 9, 0, 0, 5},
+		{0, 0, 0, 0, 8, 0, 0, 7, 9},
+	})
+	valid, end := board.Validate()
+	fmt.Println(valid)
+	fmt.Println(end)*/
 
-	canvas := display.NewCanvas(gridMap, []*display.Pointer{pointer})
-	canvas.Render()*/
-
-	board := sudoku_board.GenerateBoard(9)
-	fmt.Println(board)
-	/*
-		board, _ := sudoku_board.NewBoard([][]int{
-			{5, 3, 0, 0, 7, 0, 0, 0, 0},
-			{6, 0, 0, 1, 9, 5, 0, 0, 0},
-			{0, 9, 8, 0, 0, 0, 0, 6, 0},
-			{8, 0, 0, 0, 6, 0, 0, 0, 3},
-			{4, 0, 0, 8, 0, 3, 0, 0, 1},
-			{7, 0, 0, 0, 2, 0, 0, 0, 6},
-			{0, 6, 0, 0, 0, 0, 2, 8, 0},
-			{0, 0, 0, 4, 1, 9, 0, 0, 5},
-			{0, 0, 0, 0, 8, 0, 0, 7, 9},
-		})
-		valid, end := board.Validate()
-		fmt.Println(valid)
-		fmt.Println(end)*/
-
-	/*board, err := sudoku_board.NewBoard([][]int{
+/*board, err := sudoku_board.NewBoard([][]int{
 		{5, 3, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 		{6, 0, 0, 1, 9, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 		{0, 9, 8, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -123,16 +111,20 @@ func main() {
 		{3, 4, 5, 2, 8, 6, 1, 7, 9},
 	}
 
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	board.Print(&display.Pointer{Y: 1, X: 1, SelectedTileColour: "\033[47m\033[30m"})*/
-	/*
-		testItem1 := "#####\n#   ##\n#   #\n#   #\n#   #\n#####"
-		testItem2 := "#####\n#   #\n##   #\n#   #\n#   #\n#####"
-
-		result := display.SideBySide([]string{testItem1, testItem2}, 4)
-
-		fmt.Printf(result)*/
-}
+case upKey:
+			if c.pointer.y > 0 {
+				c.pointer.Up()
+			}
+		case downKey:
+			if c.pointer.y < height-1 {
+				c.pointer.Down()
+			}
+		case rightKey:
+			if c.pointer.x < width-1 {
+				c.pointer.Right()
+			}
+		case leftKey:
+			if c.pointer.x > 0 {
+				c.pointer.Left()
+			}
+}*/

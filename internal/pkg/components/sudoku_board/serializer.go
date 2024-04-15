@@ -13,24 +13,42 @@ const (
 	noValueSymbol             = "."
 	resetStyle                = "\033[0m"          // anything after this will have no custom colouring applied
 	whiteBGBlack              = "\033[47m\033[30m" // White background, Black text
+	invalidCell               = "\033[41m\033[37m"
+	invalidSelectedCell       = "\033[41m\033[30m"
+	staticCell                = "\033[100m\033[30m"
 )
 
-func SerializeBoard(board [][]int, gridSize int, pointer *display.Pointer) string {
+func (b *Board) serializeBoard(pointer *display.Pointer) string {
 	var sb strings.Builder
-	for y, row := range board {
-		if y%gridSize == 0 && y != 0 {
-			sb.WriteString(createVerticalDivider(gridSize))
+	for y, row := range b.Content {
+		if y%b.subGridSize == 0 && y != 0 {
+			sb.WriteString(createVerticalDivider(b.subGridSize))
 		}
 		for x, val := range row {
-			if x%gridSize == 0 && x != 0 {
+			if x%b.subGridSize == 0 && x != 0 {
 				sb.WriteString(horizontalDividerSymbol + " ")
+			}
+
+			tileColour := ""
+			if b.initialBoard[y][x] != 0 {
+				tileColour = staticCell
+			}
+			if _, ok := b.invalidPlacements[[2]int{y, x}]; ok {
+				tileColour = invalidCell
+			}
+			if x == pointer.X && y == pointer.Y {
+				if tileColour == invalidCell {
+					tileColour = invalidSelectedCell
+				} else {
+					tileColour = pointer.SelectedTileColour
+				}
 			}
 
 			func() {
 				defer sb.WriteString(" ")
-				if x == pointer.X && y == pointer.Y {
+				if tileColour != "" {
 					defer sb.WriteString(resetStyle)
-					sb.WriteString(pointer.SelectedTileColour)
+					sb.WriteString(tileColour)
 				}
 
 				if val == 0 {
@@ -45,12 +63,12 @@ func SerializeBoard(board [][]int, gridSize int, pointer *display.Pointer) strin
 	return sb.String()
 }
 
-func createVerticalDivider(gridSize int) (divider string) {
+func createVerticalDivider(size int) (divider string) {
 
-	squareDivider := createLine(gridSize * 2)
+	squareDivider := createLine(size * 2)
 	divider = squareDivider
 
-	for i := 0; i < gridSize-2; i++ {
+	for i := 0; i < size-2; i++ {
 		divider += crossSectionDividerSymbol + squareDivider + verticalDividerSymbol
 	}
 

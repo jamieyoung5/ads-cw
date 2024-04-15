@@ -44,17 +44,7 @@ func GenerateBoard(size int) [][]int {
 	return board
 }
 
-func addRandomPlacement(board [][]int, size int, subGridSize int) {
-	matrix := generateDancingLinksMatrix(size, subGridSize, board)
-	results := make([][]*dlx.Node, 0)
-	matrix.Search([]*dlx.Node{}, &results)
-	if len(results) == 1 {
-		//convert board and exit
-	}
-
-}
-
-func createTestBoard() *Board {
+func Create9x9TestBoard() *Board {
 	board, _ := NewBoard([][]int{
 		{5, 3, 0, 0, 7, 0, 0, 0, 0},
 		{6, 0, 0, 1, 9, 5, 0, 0, 0},
@@ -67,11 +57,30 @@ func createTestBoard() *Board {
 		{0, 0, 0, 0, 8, 0, 0, 7, 9},
 	})
 	return board
-	/*
-		return Board{
-			{2, 0, 0, 4},
-			{0, 0, 0, 0},
-			{1, 0, 0, 2},
-			{3, 0, 0, 0},
-		}*/
+}
+
+func CreateNearlyComplete9x9TestBoard() *Board {
+	board, _ := NewBoard([][]int{
+		{5, 3, 4, 6, 7, 8, 9, 1, 2},
+		{6, 7, 2, 1, 9, 5, 3, 4, 8},
+		{1, 9, 8, 3, 4, 2, 5, 6, 7},
+		{8, 5, 9, 7, 6, 1, 4, 2, 3},
+		{4, 2, 6, 8, 5, 3, 7, 9, 1},
+		{7, 1, 3, 9, 0, 4, 8, 5, 6},
+		{9, 6, 1, 5, 0, 7, 2, 8, 4},
+		{2, 8, 7, 4, 1, 9, 6, 3, 5},
+		{3, 4, 5, 2, 8, 6, 1, 7, 9},
+	})
+	return board
+}
+
+func Create4x4TestBoard() *Board {
+	board, _ := NewBoard([][]int{
+		{2, 0, 0, 4},
+		{0, 0, 0, 0},
+		{1, 0, 0, 2},
+		{3, 0, 0, 0},
+	})
+
+	return board
 }
