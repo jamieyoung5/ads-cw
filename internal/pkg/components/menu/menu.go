@@ -2,12 +2,11 @@ package menu
 
 import (
 	"ads-cw/pkg/display"
-	"errors"
 	"fmt"
 	"strings"
 )
 
-type Action func()
+type Action func() *display.State
 
 type Item struct {
 	Name    string
@@ -25,18 +24,17 @@ func (m Menu) GetDimensions() (height int, width int) {
 	return 4, 1
 }
 
-func (m Menu) Select(pointer *display.Pointer, keyCode []byte) (exit bool, err error) {
+func (m Menu) Select(pointer *display.Pointer, keyCode []byte) (*display.State, bool) {
 	if keyCode[0] == 10 {
-		if len(m) > pointer.Y {
-
-			m[pointer.Y].Runner()
-			return true, nil
-		} else {
-			return false, errors.New("invalid menu item selected")
+		if len(m) < pointer.Y {
+			pointer.Y = len(m) - 1
 		}
+		return m[pointer.Y].Runner(), true
+
 	}
 
-	return false, errors.New("invalid input, navigate to menu item and press enter to select")
+	//TODO: show error message telling user to select an item!
+	return nil, false
 }
 
 func (m Menu) Serialize(pointer *display.Pointer) string {

@@ -1,14 +1,16 @@
 package time_trials
 
-func Play() {
+import "ads-cw/pkg/display"
+
+func Play() *display.State {
 	time, size := config()
-	run(size, time)
+	return run(size, time)
 }
 
 func config() (time int, size int) {
 	return 5, 9
 }
 
-func run(size int, time int) {
-
+func run(size int, time int) *display.State {
+	return nil
 }

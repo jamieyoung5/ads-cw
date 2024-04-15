@@ -1,12 +1,15 @@
 package game_history
 
-import "fmt"
+import (
+	"ads-cw/pkg/display"
+	"fmt"
+)
 
-func Open() {
-	run()
+func Open() *display.State {
+	return run()
 }
 
-func run() {
+func run() *display.State {
 	fmt.Printf("displaying game history")
-
+	return nil
 }

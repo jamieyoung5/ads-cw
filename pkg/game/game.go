@@ -29,7 +29,7 @@ func (s *Sudoku) Play() {
 		pointer := display.NewPointer(0, 0, display.MenuControls, 0, 0)
 		grid[0][0].Pointer = pointer
 
-		canvas := display.NewCanvas(grid, []*display.Pointer{pointer})
+		canvas := display.NewCanvas(grid, []*display.Pointer{pointer}, true)
 		canvas.Render()
 	}
 }

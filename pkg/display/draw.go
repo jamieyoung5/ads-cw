@@ -16,6 +16,7 @@ func (c *Canvas) draw(quit chan bool) {
 			time.Sleep(1 * time.Second)
 			newState := c.serialize()
 			if newState != state {
+				fmt.Print("\033[H\033[2J\033[3J")
 				fmt.Printf(newState)
 			}
 		}
@@ -24,8 +25,9 @@ func (c *Canvas) draw(quit chan bool) {
 
 func (c *Canvas) serialize() string {
 	var builder strings.Builder
+	components := c.States.Peek().Components
 
-	for _, row := range c.Components {
+	for _, row := range components {
 		var items []string
 		for _, componentNode := range row {
 			items = append(items, componentNode.Component.Serialize(componentNode.Pointer))

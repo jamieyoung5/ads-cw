@@ -3,7 +3,6 @@ package sudoku_board
 import (
 	"ads-cw/pkg/display"
 	"ads-cw/pkg/dlx"
-	"errors"
 	"fmt"
 	"math"
 )
@@ -38,7 +37,14 @@ func NewBoard(board [][]int) (*Board, error) {
 		copy(initialBoardCopy[i], board[i])
 	}
 
-	return &Board{Content: board, initialBoard: initialBoardCopy, emptyCells: emptyCells, size: verticalSize, subGridSize: subGridSize, invalidPlacements: make(map[[2]int]struct{})}, nil
+	return &Board{
+		Content:           board,
+		initialBoard:      initialBoardCopy,
+		emptyCells:        emptyCells,
+		size:              verticalSize,
+		subGridSize:       subGridSize,
+		invalidPlacements: make(map[[2]int]struct{}),
+	}, nil
 }
 
 func (b *Board) Print(pointer *display.Pointer) {
@@ -53,12 +59,14 @@ func (b *Board) GetDimensions() (height, width int) {
 	return len(b.Content), len(b.Content[0])
 }
 
-func (b *Board) Select(pointer *display.Pointer, keyCode []byte) (exit bool, err error) {
+func (b *Board) Select(pointer *display.Pointer, keyCode []byte) (*display.State, bool) {
 
 	if b.initialBoard[pointer.Y][pointer.X] != 0 {
-		return false, errors.New("you cannot edit a pre-set cell")
+		//TODO: show error message telling user they cant edit static, pre-set cells!
+		return nil, false
 	}
 
+	//TODO: allow for edits between 1 and beyond if they fit the board size
 	if keyCode[0] >= '1' && keyCode[0] <= '9' {
 		if b.Content[pointer.Y][pointer.X] == 0 {
 			b.emptyCells--
@@ -66,20 +74,21 @@ func (b *Board) Select(pointer *display.Pointer, keyCode []byte) (exit bool, err
 		b.Content[pointer.Y][pointer.X] = int(keyCode[0] - '0')
 		valid, end := b.Validate()
 		if end {
-			return true, nil
+			return nil, true
 		}
 
 		if !valid {
 			b.invalidPlacements[[2]int{pointer.Y, pointer.X}] = struct{}{}
-			return false, errors.New("invalid placement")
+			return nil, false
 		} else {
 			delete(b.invalidPlacements, [2]int{pointer.Y, pointer.X})
-			return false, err
+			return nil, false
 		}
 
 	}
 
-	return false, errors.New("you can only change a tile to a number between 1 and 9")
+	//TODO: show error message telling user they can only edit a tile to a number between 1 and {size}
+	return nil, false
 }
 
 func (b *Board) Validate() (validBoard bool, boardSolved bool) {

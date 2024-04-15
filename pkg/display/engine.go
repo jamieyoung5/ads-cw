@@ -1,6 +1,7 @@
 package display
 
 import (
+	"ads-cw/pkg/types"
 	"bufio"
 	"fmt"
 	"os"
@@ -8,42 +9,57 @@ import (
 	"runtime"
 )
 
-const (
-	asciiEscape        byte = 27
-	asciiSquareBRacket byte = 91
-	upKey              byte = 65
-	downKey            byte = 66
-	rightKey           byte = 67
-	leftKey            byte = 68
-)
-
-type Canvas struct {
+type State struct {
 	Components [][]*ComponentNode
-	pointers   []*Pointer
+	Pointers   []*Pointer
+	Persist    bool
 }
 
-func NewCanvas(components [][]*ComponentNode, pointers []*Pointer) *Canvas {
-	return &Canvas{
+type Canvas struct {
+	States *types.Stack[*State]
+}
+
+func NewCanvas(components [][]*ComponentNode, pointers []*Pointer, persist bool) *Canvas {
+	state := &State{
 		Components: components,
-		pointers:   pointers,
+		Pointers:   pointers,
+		Persist:    persist,
+	}
+	stateStack := types.NewStack[*State]()
+	stateStack.Push(state)
+
+	return &Canvas{
+		States: stateStack,
 	}
 }
 
 func (c *Canvas) Render() {
-	quit := make(chan bool)
-	c.Print()
-	go c.draw(quit)
+	quitDrawing := make(chan bool)
+	go c.draw(quitDrawing)
 
-	reader := bufio.NewReader(os.Stdin)
+	for !c.States.IsEmpty() {
+		state := c.States.Peek()
 
-	// Set terminal to raw mode to properly handle key presses
-	if runtime.GOOS != "windows" {
-		exec.Command("stty", "-f", "/dev/tty", "cbreak", "min", "1").Run()
-		exec.Command("stty", "-f", "/dev/tty", "-echo").Run()
-	} else {
-		// Windows terminal settings should be adjusted if necessary
+		c.Print()
+
+		reader := bufio.NewReader(os.Stdin)
+
+		// Set terminal to raw mode to properly handle key presses
+		if runtime.GOOS != "windows" {
+			exec.Command("stty", "-f", "/dev/tty", "cbreak", "min", "1").Run()
+			exec.Command("stty", "-f", "/dev/tty", "-echo").Run()
+		} else {
+			// Windows terminal settings should be adjusted if necessary
+		}
+
+		c.ListenForInput(state, reader)
 	}
 
+	quitDrawing <- true
+
+}
+
+func (c *Canvas) ListenForInput(state *State, reader *bufio.Reader) {
 	for {
 		inputSequence, err := readKeySequence(reader)
 		if err != nil {
@@ -53,8 +69,8 @@ func (c *Canvas) Render() {
 
 		fmt.Println("Debug: Key sequence received:", inputSequence) // Debugging output
 
-		for _, pointer := range c.pointers {
-			height, width := c.Components[pointer.GridY][pointer.GridX].Component.GetDimensions()
+		for _, pointer := range state.Pointers {
+			height, width := state.Components[pointer.GridY][pointer.GridX].Component.GetDimensions()
 			if macro, ok := pointer.controls[Encode(inputSequence)]; ok {
 				switch macro {
 				case up:
@@ -74,11 +90,28 @@ func (c *Canvas) Render() {
 						pointer.Right()
 					}
 				default:
-					//Select with control!
+					//If the user isnt moving around the board but they pressed a control, execute components action
+					nextState, exit := state.Components[pointer.GridY][pointer.GridX].Component.Select(pointer, inputSequence)
+					c.Print()
 
-					exit, _ := c.Components[pointer.GridY][pointer.GridX].Component.Select(pointer, inputSequence)
-					quit <- exit
+					// current state is finished
+					if exit {
+						// there is a new state to add
+						if nextState != nil {
+							//If the current state is NOT persistent, get rid of it
+							if !state.Persist {
+								c.States.Pop()
+							}
 
+							//Add the new state to the top of the stack
+							c.States.Push(nextState)
+						} else {
+							c.States.Pop()
+						}
+
+						//exit component
+						return
+					}
 				}
 				c.Print()
 			}
@@ -108,5 +141,6 @@ func readKeySequence(reader *bufio.Reader) ([]byte, error) {
 func (c *Canvas) Print() {
 	fmt.Print("\033[H\033[2J\033[3J")
 	canvas := c.serialize()
+
 	fmt.Printf(canvas)
 }

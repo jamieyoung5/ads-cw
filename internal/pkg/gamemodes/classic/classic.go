@@ -5,16 +5,16 @@ import (
 	"ads-cw/pkg/display"
 )
 
-func Play() {
+func Play() *display.State {
 	size := config()
-	run(size)
+	return run(size)
 }
 
 func config() (size int) {
 	return 9
 }
 
-func run(size int) {
+func run(size int) *display.State {
 	board := sudoku_board.CreateNearlyComplete9x9TestBoard()
 	gridMap := [][]*display.ComponentNode{
 		{
@@ -26,6 +26,9 @@ func run(size int) {
 	pointer := display.NewPointer(0, 0, display.SudokuControls, 0, 0)
 	gridMap[0][0].Pointer = pointer
 
-	canvas := display.NewCanvas(gridMap, []*display.Pointer{pointer})
-	canvas.Render()
+	return &display.State{
+		Components: gridMap,
+		Pointers:   []*display.Pointer{pointer},
+		Persist:    false,
+	}
 }

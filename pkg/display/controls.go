@@ -72,6 +72,7 @@ var (
 	MenuControls = Controls{
 		UpArrow:   up,
 		DownArrow: down,
+		Enter:     "",
 	}
 )
 
