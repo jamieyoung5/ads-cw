@@ -44,6 +44,21 @@ func GenerateBoard(size int) [][]int {
 	return board
 }
 
+func Create9x9TestBoard2() *Board {
+	board, _ := NewBoard([][]int{
+		{5, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 8, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0},
+	})
+	return board
+}
+
 func Create9x9TestBoard() *Board {
 	board, _ := NewBoard([][]int{
 		{5, 3, 0, 0, 7, 0, 0, 0, 0},

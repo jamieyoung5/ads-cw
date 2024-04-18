@@ -14,7 +14,7 @@ type Item struct {
 	Runner  Action
 }
 
-type Menu [4]*Item
+type Menu []*Item
 
 func (m Menu) Print(pointer *display.Pointer) {
 	fmt.Printf(m.Serialize(pointer))
@@ -33,7 +33,6 @@ func (m Menu) Select(pointer *display.Pointer, macro string) (*display.State, bo
 
 	}
 
-	//TODO: show error message telling user to select an item!
 	return nil, false
 }
 

@@ -3,6 +3,7 @@ package sudoku_board
 import (
 	"ads-cw/pkg/display"
 	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -22,31 +23,34 @@ func (b *Board) serializeBoard(pointer *display.Pointer) string {
 	var sb strings.Builder
 
 	for y, row := range b.Content {
-		if y%b.subGridSize == 0 && y != 0 {
-			sb.WriteString(createVerticalDivider(b.subGridSize))
+		if y%b.SubGridSize == 0 && y != 0 {
+			sb.WriteString(createVerticalDivider(b.SubGridSize))
 		}
 		for x, val := range row {
-			if x%b.subGridSize == 0 && x != 0 {
+			if x%b.SubGridSize == 0 && x != 0 {
 				sb.WriteString(horizontalDividerSymbol + " ")
 			}
 
 			tileColour := ""
-			if b.initialBoard[y][x] != 0 {
+			if b.InitialBoard[y][x] != 0 {
 				tileColour = staticCell
 			}
-			if _, ok := b.invalidPlacements[[2]int{y, x}]; ok {
+			if _, ok := b.InvalidPlacements[[2]int{y, x}]; ok {
 				tileColour = invalidCell
 			}
-			if x == pointer.X && y == pointer.Y {
-				if tileColour == invalidCell {
-					tileColour = invalidSelectedCell
-				} else {
-					tileColour = pointer.SelectedTileColour
+			if pointer != nil {
+				if x == pointer.X && y == pointer.Y {
+					if tileColour == invalidCell {
+						tileColour = invalidSelectedCell
+					} else {
+						tileColour = pointer.SelectedTileColour
+					}
 				}
 			}
 
 			func() {
-				defer sb.WriteString(" ")
+
+				defer sb.WriteString(strings.Repeat(" ", 2-(len(strconv.Itoa(b.Content[y][x]))-1)))
 				if tileColour != "" {
 					defer sb.WriteString(resetStyle)
 					sb.WriteString(tileColour)
@@ -63,7 +67,7 @@ func (b *Board) serializeBoard(pointer *display.Pointer) string {
 	}
 
 	sb.WriteString(invalidCell)
-	sb.WriteString(b.footerMessage)
+	sb.WriteString(b.FooterMessage)
 	sb.WriteString(resetStyle)
 
 	return sb.String()
@@ -71,7 +75,7 @@ func (b *Board) serializeBoard(pointer *display.Pointer) string {
 
 func createVerticalDivider(size int) (divider string) {
 
-	squareDivider := createLine(size * 2)
+	squareDivider := createLine(size * 3)
 	divider = squareDivider
 
 	for i := 0; i < size-2; i++ {

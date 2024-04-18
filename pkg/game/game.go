@@ -2,6 +2,9 @@ package game
 
 import (
 	"ads-cw/internal/pkg/components/menu"
+	"ads-cw/internal/pkg/gamemodes/classic"
+	"ads-cw/internal/pkg/gamemodes/time_trials"
+	"ads-cw/internal/pkg/gamemodes/two_player"
 	"ads-cw/pkg/display"
 )
 
@@ -22,7 +25,23 @@ func (s *Sudoku) Play() {
 	for {
 		grid := [][]*display.ComponentNode{
 			{
-				&display.ComponentNode{Component: menu.MainMenu},
+				&display.ComponentNode{Component: menu.Menu{
+					{
+						Name:    "Classic Sudoku",
+						Summary: "classic sudoku! fill in a board with numbers without repeating any in rows, columns, or regions",
+						Runner:  classic.DifficultySelect,
+					},
+					{
+						Name:    "Time Trials",
+						Summary: "play sudoku against a timer!",
+						Runner:  time_trials.DifficultySelect,
+					},
+					{
+						Name:    "Two Player Mode",
+						Summary: "play against friends to see who can solve their board first",
+						Runner:  two_player.DifficultySelect,
+					},
+				}},
 			},
 		}
 
