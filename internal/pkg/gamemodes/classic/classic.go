@@ -3,6 +3,7 @@ package classic
 import (
 	"ads-cw/internal/pkg/components/menu"
 	"ads-cw/internal/pkg/components/sudoku_board"
+	"ads-cw/pkg/controls"
 	"ads-cw/pkg/display"
 )
 
@@ -47,7 +48,7 @@ func DifficultySelect() *display.State {
 		},
 	}
 
-	pointer := display.NewPointer(0, 0, display.MenuControls, 0, 0)
+	pointer := display.NewPointer(0, 0, controls.MenuControls, 0, 0)
 	gridMap[0][0].Pointer = pointer
 
 	return &display.State{
@@ -65,7 +66,7 @@ func play(board *sudoku_board.Board) *display.State {
 		},
 	}
 
-	pointer := display.NewPointer(0, 0, display.SudokuControls, 0, 0)
+	pointer := display.NewPointer(0, 0, controls.SudokuControls, 0, 0)
 	gridMap[0][0].Pointer = pointer
 
 	return &display.State{

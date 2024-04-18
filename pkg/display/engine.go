@@ -1,6 +1,7 @@
 package display
 
 import (
+	"ads-cw/pkg/controls"
 	"ads-cw/pkg/types"
 	"bufio"
 	"fmt"
@@ -71,25 +72,25 @@ func (c *Canvas) ListenForInput(state *State, reader *bufio.Reader) {
 
 		for _, pointer := range state.Pointers {
 			height, width := state.Components[pointer.GridY][pointer.GridX].Component.GetDimensions()
-			if macro, ok := pointer.controls[Encode(inputSequence)]; ok {
+			if macro, ok := pointer.controls[controls.Encode(inputSequence)]; ok {
 				switch macro {
-				case Up:
+				case controls.Up:
 					if pointer.Y > 0 {
 						pointer.Up()
 					}
-				case Down:
+				case controls.Down:
 					if pointer.Y < height-1 {
 						pointer.Down()
 					}
-				case Left:
+				case controls.Left:
 					if pointer.X > 0 {
 						pointer.Left()
 					}
-				case Right:
+				case controls.Right:
 					if pointer.X < width-1 {
 						pointer.Right()
 					}
-				case Undo, Redo, One, Two, Three, Four, Five, Six, Seven, Eight, Nine, Selected, Clear:
+				case controls.Undo, controls.Redo, controls.One, controls.Two, controls.Three, controls.Four, controls.Five, controls.Six, controls.Seven, controls.Eight, controls.Nine, controls.Selected, controls.Clear:
 					//If the user isnt moving around the board but they pressed a control, execute components action
 					nextState, exit := state.Components[pointer.GridY][pointer.GridX].Component.Select(pointer, macro)
 					c.Print()

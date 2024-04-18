@@ -3,6 +3,7 @@ package two_player
 import (
 	"ads-cw/internal/pkg/components/menu"
 	"ads-cw/internal/pkg/components/sudoku_board"
+	"ads-cw/pkg/controls"
 	"ads-cw/pkg/display"
 )
 
@@ -47,7 +48,7 @@ func DifficultySelect() *display.State {
 		},
 	}
 
-	pointer := display.NewPointer(0, 0, display.MenuControls, 0, 0)
+	pointer := display.NewPointer(0, 0, controls.MenuControls, 0, 0)
 	gridMap[0][0].Pointer = pointer
 
 	return &display.State{
@@ -65,10 +66,10 @@ func run(board1 *sudoku_board.Board, board2 *sudoku_board.Board) *display.State 
 		},
 	}
 
-	pointer1 := display.NewPointer(0, 0, display.SudokuControls, 0, 0)
+	pointer1 := display.NewPointer(0, 0, controls.SudokuControls, 0, 0)
 	gridMap[0][0].Pointer = pointer1
 
-	pointer2 := display.NewPointer(0, 0, display.SudokuControlsAlternate, 1, 0)
+	pointer2 := display.NewPointer(0, 0, controls.SudokuControlsAlternate, 1, 0)
 	gridMap[0][1].Pointer = pointer2
 
 	return &display.State{

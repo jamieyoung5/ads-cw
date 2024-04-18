@@ -1,6 +1,7 @@
 package menu
 
 import (
+	"ads-cw/pkg/controls"
 	"ads-cw/pkg/display"
 	"fmt"
 	"strings"
@@ -25,7 +26,7 @@ func (m Menu) GetDimensions() (height int, width int) {
 }
 
 func (m Menu) Select(pointer *display.Pointer, macro string) (*display.State, bool) {
-	if macro == display.Selected {
+	if macro == controls.Selected {
 		if len(m) < pointer.Y {
 			pointer.Y = len(m) - 1
 		}

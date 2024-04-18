@@ -1,6 +1,7 @@
 package sudoku_board
 
 import (
+	"ads-cw/pkg/controls"
 	"ads-cw/pkg/display"
 	"ads-cw/pkg/dlx"
 	"bytes"
@@ -77,20 +78,20 @@ func (b *Board) Select(pointer *display.Pointer, macro string) (*display.State, 
 	}
 
 	switch macro {
-	case display.Clear:
+	case controls.Clear:
 		b.PreviousState = b.DeepCopy()
 		b.EmptyCells++
 		b.Content[pointer.Y][pointer.X] = 0
 		delete(b.InvalidPlacements, [2]int{pointer.Y, pointer.X})
 		return nil, false
-	case display.Redo:
+	case controls.Redo:
 		if b.FutureState != nil {
 			previousState := b.DeepCopy()
 			b.MapNewState(b.FutureState)
 			b.PreviousState = previousState
 		}
 		return nil, false
-	case display.Undo:
+	case controls.Undo:
 		if b.PreviousState != nil {
 			futureState := b.DeepCopy()
 			b.MapNewState(b.PreviousState)

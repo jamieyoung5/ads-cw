@@ -45,7 +45,27 @@ func (t *Timer) Serialize(pointer *display.Pointer) string {
 	}
 
 	timeLeft := time.Until(t.Start.Add(t.Duration))
-	return fmt.Sprintf("Time left: %vs", timeLeft.Seconds())
+	return fmt.Sprintf("Time left: %v", formatDuration(timeLeft))
+}
+
+func formatDuration(d time.Duration) string {
+	d = d.Round(time.Second)
+
+	hours := d.Hours()
+	minutes := d.Minutes()
+	seconds := d.Seconds()
+
+	if hours >= 1 {
+
+		min := int(minutes) % 60
+		return fmt.Sprintf("%dh%dm", int(hours), min)
+	} else if minutes >= 1 {
+
+		sec := int(seconds) % 60
+		return fmt.Sprintf("%dm%ds", int(minutes), sec)
+	}
+
+	return fmt.Sprintf("%ds", int(seconds))
 }
 
 func (t *Timer) Select(pointer *display.Pointer, macro string) (state *display.State, exit bool) {

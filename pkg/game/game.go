@@ -5,6 +5,7 @@ import (
 	"ads-cw/internal/pkg/gamemodes/classic"
 	"ads-cw/internal/pkg/gamemodes/time_trials"
 	"ads-cw/internal/pkg/gamemodes/two_player"
+	"ads-cw/pkg/controls"
 	"ads-cw/pkg/display"
 )
 
@@ -16,11 +17,6 @@ func NewSudoku() *Sudoku {
 }
 
 func (s *Sudoku) Play() {
-	oldState, err := display.TerminalRawMode()
-	if err != nil {
-		panic(err)
-	}
-	defer display.RestoreTerminal(oldState)
 
 	for {
 		grid := [][]*display.ComponentNode{
@@ -45,7 +41,7 @@ func (s *Sudoku) Play() {
 			},
 		}
 
-		pointer := display.NewPointer(0, 0, display.MenuControls, 0, 0)
+		pointer := display.NewPointer(0, 0, controls.MenuControls, 0, 0)
 		grid[0][0].Pointer = pointer
 
 		canvas := display.NewCanvas(grid, []*display.Pointer{pointer}, true)
