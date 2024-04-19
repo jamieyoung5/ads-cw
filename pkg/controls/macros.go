@@ -21,6 +21,7 @@ const (
 	Seven    = "7"
 	Eight    = "8"
 	Nine     = "9"
+	Exit     = "exit"
 )
 
 // Controls key: base(d)64 encoded byte sequence, value: macro
@@ -46,6 +47,7 @@ var (
 		SevenKey: Seven,
 		EightKey: Eight,
 		NineKey:  Nine,
+		BackTick: Exit,
 	}
 
 	SudokuControlsAlternate = Controls{
@@ -67,6 +69,7 @@ var (
 		SemiColon:  Seven,
 		Apostrophe: Eight,
 		Hashtag:    Nine,
+		BackTick:   Exit,
 	}
 
 	MenuControls = Controls{

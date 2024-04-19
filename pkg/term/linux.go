@@ -1,5 +1,4 @@
 //go:build linux
-// +build linux
 
 package term
 
@@ -29,7 +28,10 @@ func (t *linuxTerminal) EnableRawMode() error {
 	newState := termios
 	newState.Lflag &^= syscall.ECHO | syscall.ICANON
 	_, _, err := syscall.Syscall6(syscall.SYS_IOCTL, uintptr(t.fd), syscall.TCSETS, uintptr(unsafe.Pointer(&newState)), 0, 0, 0)
-	return err
+	if err != 0 {
+		return syscall.Errno(err)
+	}
+	return nil
 }
 
 func (t *linuxTerminal) Restore() error {

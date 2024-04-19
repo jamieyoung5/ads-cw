@@ -113,8 +113,14 @@ func (c *Canvas) ListenForInput(state *State, reader *bufio.Reader) {
 						//exit component
 						return
 					}
+				case controls.Exit:
+					if !state.Persist {
+						c.States.Pop()
+						return
+					}
 				}
 				c.Print()
+
 			}
 		}
 	}

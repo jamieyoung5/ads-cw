@@ -7,7 +7,6 @@ import (
 	"time"
 )
 
-// GenerateBoard sorry, jamie. - sincerely, past jamie
 func GenerateBoard(size int) [][]int {
 	board := make([][]int, size)
 	for i := range board {

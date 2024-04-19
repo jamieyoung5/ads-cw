@@ -14,6 +14,7 @@ var (
 	SemiColon  = Encode([]byte{59})
 	Apostrophe = Encode([]byte{39})
 	Hashtag    = Encode([]byte{35})
+	BackTick   = Encode([]byte{96})
 
 	OneKey   = Encode([]byte{49})
 	TwoKey   = Encode([]byte{50})
