@@ -93,6 +93,7 @@ The controls are categorized into two sets: general navigation and specific game
 
 If playing in two player mode, the second players controls are:
 
+(Linux)
 - **Navigation:**
     - `Up Arrow`: Move up.
     - `Down Arrow`: Move down.
@@ -115,3 +116,25 @@ If playing in two player mode, the second players controls are:
     - `'`: Enter '8'.
     - `#`: Enter '9'.
 
+(Windows)
+- **Navigation:**
+    - `L`: Move up.
+    - `.`: Move down.
+    - `,`: Move left.
+    - `/`: Move right.
+
+- **Editing and Cell Selection:**
+    - `M`: Undo last action.
+    - `N`: Clear the selected cell.
+    - `B`: Redo the last undone action.
+
+- **Number Input:**
+    - `E`: Enter '1'.
+    - `R`: Enter '2'.
+    - `T`: Enter '3'.
+    - `Y`: Enter '4'.
+    - `U`: Enter '5'.
+    - `I`: Enter '6'.
+    - `O`: Enter '7'.
+    - `P`: Enter '8'.
+    - `[`: Enter '9'.
