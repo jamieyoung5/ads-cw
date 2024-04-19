@@ -3,16 +3,16 @@
 package controls
 
 var (
-	UpArrow    = Encode([]byte{27, 91, 65}) // ESC [ A
-	DownArrow  = Encode([]byte{27, 91, 66}) // ESC [ B
-	LeftArrow  = Encode([]byte{27, 91, 68}) // ESC [ D
-	RightArrow = Encode([]byte{27, 91, 67}) // ESC [ C
+	UpArrow    = Encode([]byte{108}) // ESC [ A
+	DownArrow  = Encode([]byte{46})  // ESC [ B
+	LeftArrow  = Encode([]byte{44})  // ESC [ D
+	RightArrow = Encode([]byte{47})  // ESC [ C
 
 	Enter = Encode([]byte{13}) // Carriage return (might need to be adjusted based on terminal)
 
-	SemiColon  = Encode([]byte{59})
-	Apostrophe = Encode([]byte{39})
-	Hashtag    = Encode([]byte{35})
+	SemiColon  = Encode([]byte{111})
+	Apostrophe = Encode([]byte{112})
+	Hashtag    = Encode([]byte{91})
 	BackTick   = Encode([]byte{96})
 
 	OneKey   = Encode([]byte{49})
@@ -29,12 +29,12 @@ var (
 	B = Encode([]byte{98})
 	C = Encode([]byte{99})
 	D = Encode([]byte{100})
-	F = Encode([]byte{102})
-	G = Encode([]byte{103})
-	H = Encode([]byte{104})
-	J = Encode([]byte{106})
-	K = Encode([]byte{107})
-	L = Encode([]byte{108})
+	F = Encode([]byte{101})
+	G = Encode([]byte{114})
+	H = Encode([]byte{116})
+	J = Encode([]byte{121})
+	K = Encode([]byte{117})
+	L = Encode([]byte{105})
 	M = Encode([]byte{109})
 	N = Encode([]byte{110})
 	S = Encode([]byte{115})
