@@ -1,6 +1,7 @@
 # ads-cw: Sudoku Game
 
 Welcome to my sudoku game, designed as part of the Algorithms and Data Structures Module. This README provides detailed instructions on how to install Go, set up the project, and build the game.
+For your convenience, pre-built binaries for both linux and windows can be found in ./build
 
 ## Prerequisites
 
