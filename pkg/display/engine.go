@@ -142,6 +142,10 @@ func readKeySequence(reader *bufio.Reader) ([]byte, error) {
 		}
 	}
 
+	if input > 'A' && input <= 'Z' {
+		keySequence[0] += 32
+	}
+
 	return keySequence, nil
 }
 
